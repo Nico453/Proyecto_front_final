@@ -1,0 +1,55 @@
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white border-r">
+    <div class="h-16 flex items-center justify-center border-b">
+      <span class="text-xl font-bold">MiApp</span>
+    </div>
+
+    <nav class="flex flex-col p-4 space-y-2 text-gray-700">
+      <a routerLink="/dashboard/proyectos"
+         routerLinkActive="bg-blue-100 text-blue-600"
+         class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 7h18M3 12h18M3 17h18"></path>
+        </svg>
+        <span>Proyectos</span>
+      </a>
+
+      <a routerLink="/dashboard/proyectos"
+         routerLinkActive="bg-blue-100 text-blue-600"
+         class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"></path>
+        </svg>
+        <span>Historias de Usuario</span>
+      </a>
+
+      <a routerLink="/dashboard/proyectos"
+         routerLinkActive="bg-blue-100 text-blue-600"
+         class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>Tareas</span>
+      </a>
+
+      <button (click)="logout()"
+              class="flex items-center space-x-2 p-2 rounded text-red-500 hover:bg-red-100 transition mt-4">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"></path>
+        </svg>
+        <span>Cerrar sesión</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <div class="flex-1 p-6 overflow-y-auto">
+    <h1 class="text-xl font-semibold mb-4">Bienvenido, {{ userName }}</h1>
+    <router-outlet></router-outlet>
+  </div>
+</div>

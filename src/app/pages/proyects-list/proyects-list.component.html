@@ -1,0 +1,35 @@
+<div class="relative overflow-x-auto shadow rounded-lg mt-6">
+        <table class="min-w-full text-sm text-left text-gray-700 bg-white">
+          <thead class="text-xs uppercase bg-gray-100 text-gray-600">
+            <tr>
+              <th class="px-6 py-3">ID</th>
+              <th class="px-6 py-3">Nombre</th>
+              <th class="px-6 py-3">Estado</th>
+              <th class="px-6 py-3">Última actualización</th>
+              <th class="px-6 py-3 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let proyecto of proyectos"
+              class="border-b hover:bg-gray-50"
+            >
+              <td class="px-6 py-4 font-medium text-gray-900">
+                {{ proyecto.id }}
+              </td>
+              <td class="px-6 py-4">{{ proyecto.nombre }}</td>
+              <td class="px-6 py-4">{{ proyecto.estado }}</td>
+              <td class="px-6 py-4">
+                {{ proyecto.fecha_actualizacion | date : "yyyy-MM-dd HH:mm" }}
+              </td>
+              <td class="px-6 py-4 text-right">
+                <a
+                  href="#"
+                  class="text-indigo-600 hover:text-indigo-900 font-medium"
+                  >Editar</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
