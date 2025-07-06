@@ -6,7 +6,6 @@ import { ProyectServicesService } from '../../services/proyect-services.service'
 import { forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
-// Interfaz combinada para mostrar el usuario con su asignación
 interface MiembroConUsuario {
   id: number;
   estado: string;
@@ -32,11 +31,26 @@ export class ProyectoDetalleComponent implements OnInit {
   esSCRUM = false;
   nombreProyecto = '';
 
-  // Estados para el modal de invitación
+  // Estado modal de invitación
   modalInvitacionAbierto = false;
   correoInvitado = '';
   rolInvitado: number | null = null;
 
+  // Estado modal editar y eliminar
+  modalEditarAbierto = false;
+  modalEliminarAbierto = false;
+  miembroSeleccionado: any = null;
+
+  // Estado modal historia de usuario
+  modalCrearHUAbierto = false;
+  nuevaHU = {
+  titulo: '',
+  descripcion: '',
+  prioridad: 2,
+  puntos_historia: 0,
+  tiempo_estimado: 0,
+  asignado_a: null
+};
   constructor(
     private route: ActivatedRoute,
     private proyectoService: ProyectServicesService
@@ -80,7 +94,7 @@ export class ProyectoDetalleComponent implements OnInit {
       });
   }
 
-  // Abrir y cerrar modal
+  // Invitación
   abrirModalInvitacion() {
     this.modalInvitacionAbierto = true;
   }
@@ -91,7 +105,7 @@ export class ProyectoDetalleComponent implements OnInit {
     this.rolInvitado = null;
   }
 
-  // Enviar invitación
+
   invitarColaborador() {
     if (!this.correoInvitado || !this.rolInvitado) {
       alert('Completa todos los campos');
@@ -125,5 +139,122 @@ export class ProyectoDetalleComponent implements OnInit {
         }
       );
     });
+  }
+
+  // Modales edición/eliminación de miembros
+  abrirModalEditar(miembro: any) {
+    this.miembroSeleccionado = { ...miembro };
+    this.modalEditarAbierto = true;
+  }
+
+  cerrarModalEditar() {
+    this.modalEditarAbierto = false;
+    this.miembroSeleccionado = null;
+  }
+
+  guardarRolEditado() {
+    const data = {
+      rol: this.miembroSeleccionado.rol,
+      estado: this.miembroSeleccionado.estado,
+    };
+
+    this.proyectoService
+      .actualizarMiembro(this.miembroSeleccionado.id, data)
+      .subscribe(
+        () => {
+          alert('Miembro actualizado correctamente');
+          const index = this.miembros.findIndex(
+            (m) => m.id === this.miembroSeleccionado.id
+          );
+          if (index !== -1) {
+            this.miembros[index].rol = this.miembroSeleccionado.rol;
+            this.miembros[index].estado = this.miembroSeleccionado.estado;
+          }
+          this.cerrarModalEditar();
+        },
+        (error) => {
+          console.error('Error al actualizar miembro:', error);
+          alert('Hubo un error al guardar los cambios');
+        }
+      );
+  }
+
+  abrirModalEliminar(miembro: any) {
+    this.miembroSeleccionado = miembro;
+    this.modalEliminarAbierto = true;
+  }
+
+  cerrarModalEliminar() {
+    this.modalEliminarAbierto = false;
+    this.miembroSeleccionado = null;
+  }
+
+  confirmarEliminacion() {
+    this.proyectoService
+      .eliminarMiembro(this.miembroSeleccionado.id)
+      .subscribe(() => {
+        alert('Miembro eliminado');
+        this.miembros = this.miembros.filter(
+          (m) => m.id !== this.miembroSeleccionado.id
+        );
+        this.cerrarModalEliminar();
+      });
+  }
+
+  // Historias de Usuario
+  abrirModalCrearHU() {
+    console.log('Abriendo modal HU');
+    this.modalCrearHUAbierto = true;
+  }
+
+  cerrarModalHistoria() {
+  this.modalCrearHUAbierto = false;
+  this.nuevaHU = {
+    titulo: '',
+    descripcion: '',
+    prioridad: 2,
+    puntos_historia: 0,
+    tiempo_estimado: 0,
+    asignado_a: null
+  };
+}
+
+  obtenerUsuarioProyectoId(): number | null {
+    const usuario = JSON.parse(localStorage.getItem('user')!);
+    const asignacion = this.miembros.find(
+      (m) => m.usuario.id === usuario.id
+    );
+    return asignacion ? asignacion.id : null;
+  }
+
+  crearHistoria() {
+    if (!this.nuevaHU.titulo || !this.nuevaHU.descripcion) {
+      alert('Completa todos los campos obligatorios');
+      return;
+    }
+
+    const usuarioProyectoId = this.obtenerUsuarioProyectoId();
+
+    if (!usuarioProyectoId) {
+      alert('No se encontró tu asignación en el proyecto');
+      return;
+    }
+
+    const historiaPayload = {
+      ...this.nuevaHU,
+      estado: 'Por Hacer',
+      usuario_proyecto: usuarioProyectoId,
+    };
+
+    this.proyectoService.crearHistoria(historiaPayload).subscribe(
+      () => {
+        alert('Historia creada correctamente');
+        this.cerrarModalHistoria();
+      },
+      (error) => {
+        console.error('Error al crear historia:', error);
+        alert('Error al crear historia');
+      }
+    );
   }
 }
