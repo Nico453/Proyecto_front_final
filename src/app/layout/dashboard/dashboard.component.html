@@ -16,7 +16,7 @@
         <span>Proyectos</span>
       </a>
 
-      <a routerLink="/dashboard/proyectos"
+      <a routerLink="/dashboard/historias"
          routerLinkActive="bg-blue-100 text-blue-600"
          class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -26,7 +26,7 @@
         <span>Historias de Usuario</span>
       </a>
 
-      <a routerLink="/dashboard/proyectos"
+      <a routerLink="/dashboard/tareas"
          routerLinkActive="bg-blue-100 text-blue-600"
          class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
@@ -48,8 +48,13 @@
   </aside>
 
   <!-- Main content -->
-  <div class="flex-1 p-6 overflow-y-auto">
+  <div class="flex-1 p-6 overflow-y-auto relative">
     <h1 class="text-xl font-semibold mb-4">Bienvenido, {{ userName }}</h1>
     <router-outlet></router-outlet>
+
+    <!-- Campana de notificaciones -->
+    <div class="absolute top-4 right-4">
+      <app-notification></app-notification>
+    </div>
   </div>
 </div>
