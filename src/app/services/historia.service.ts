@@ -17,4 +17,12 @@ export class HistoriaService {
       'http://127.0.0.1:8000/api/proyectos/usuario-proyectos/'
     );
   }
+  actualizarHistoria(id: number, data: Partial<HistoriaUsuario>): Observable<HistoriaUsuario> {
+  return this.http.patch<HistoriaUsuario>(
+    `http://127.0.0.1:8000/api/proyectos/historias/${id}/`,
+    data
+  );
+}
+
+  
 }

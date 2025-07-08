@@ -9,22 +9,34 @@
         <th class="px-6 py-3">Estado</th>
         <th class="px-6 py-3">Puntos</th>
         <th class="px-6 py-3">Tiempo Estimado</th>
-        <th class="px-6 py-3 text-right">Acciones</th>
+        <th class="px-6 py-3 text-center">Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let historiasUsuario of historias" class="border-b hover:bg-gray-50">
+      <tr
+        *ngFor="let historiasUsuario of historias"
+        class="border-b hover:bg-gray-50"
+      >
         <td class="px-6 py-4">{{ historiasUsuario.titulo }}</td>
         <td class="px-6 py-4">{{ historiasUsuario.descripcion }}</td>
         <td class="px-6 py-4">{{ historiasUsuario.estado }}</td>
         <td class="px-6 py-4">{{ historiasUsuario.puntos_historia }}</td>
         <td class="px-6 py-4">{{ historiasUsuario.tiempo_estimado }}</td>
-        <td class="px-6 py-4 text-right">
+        <td class="px-6 py-4 text-center">
+          <!-- Botón para cambiar estado -->
           <button
-            class="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            class="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 m-2"
+            (click)="abrirModalEdicion(historiasUsuario)"
+          >
+            Cambiar Estado
+          </button>
+
+          <!-- Botón para ver tareas -->
+          <button
+            class="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
             (click)="abrirTareas(historiasUsuario.id)"
           >
-            Abrir
+            Ver Tareas
           </button>
         </td>
       </tr>
@@ -34,4 +46,46 @@
   <p *ngIf="historias.length === 0" class="text-gray-500 mt-4">
     No tienes historias asignadas.
   </p>
+</div>
+
+<!-- Modal para editar estado -->
+<div
+  *ngIf="modalEditarAbierto"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h2 class="text-lg font-semibold mb-4">Editar Estado de la Historia</h2>
+
+    <form (ngSubmit)="guardarCambioEstado()">
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Nuevo Estado</label>
+        <select
+          [(ngModel)]="historiaEditando.estado"
+          name="nuevo_estado"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded"
+        >
+          <option value="Por Hacer">Por Hacer</option>
+          <option value="En Progreso">En Progreso</option>
+          <option value="Hecha">Hecha</option>
+        </select>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button
+          type="button"
+          (click)="cerrarModalEdicion()"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

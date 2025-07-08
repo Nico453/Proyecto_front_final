@@ -11,11 +11,14 @@ import { HistoriaUsuario } from '../../interfaces/historias-usuario';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './historias-list.component.html',
-  styleUrl: './historias-list.component.css',
+  styleUrls: ['./historias-list.component.css'], // ✅ Corregido styleUrls
 })
 export class HistoriasListComponent implements OnInit {
   historias: HistoriaUsuario[] = [];
   userId!: number;
+
+  modalEditarAbierto = false;
+  historiaEditando!: HistoriaUsuario;
 
   constructor(
     private historiaService: HistoriaService,
@@ -23,39 +26,62 @@ export class HistoriasListComponent implements OnInit {
     private router: Router
   ) {}
 
-  abrirTareas(id: number) {
-    this.router.navigate(['/dashboard/historias', id, 'tareas']);
-  }
   ngOnInit(): void {
     const user = localStorage.getItem('user');
     if (!user) return;
 
     const parsed = JSON.parse(user);
-    const userId = parsed.id;
+    this.userId = parsed.id;
 
-    this.historiaService
-      .obtenerUsuarioProyectos()
-      .subscribe((usuarioProyectos) => {
-        const activos = usuarioProyectos.filter(
-          (up) => up.usuario === userId && up.estado === 'Activo'
+    this.historiaService.obtenerUsuarioProyectos().subscribe((usuarioProyectos) => {
+      const activos = usuarioProyectos.filter(
+        (up) => up.usuario === this.userId && up.estado === 'Activo'
+      );
+      const idsRelacionUsuarioProyecto = activos.map((up) => up.id);
+
+      console.log('[🧠 ID usuario]', this.userId);
+      console.log('[🧠 Relación usuario-proyecto activa]', idsRelacionUsuarioProyecto);
+
+      this.historiaService.obtenerHistorias().subscribe((historias) => {
+        console.log('[📋 Todas las historias]', historias);
+
+        this.historias = historias.filter((h) =>
+          idsRelacionUsuarioProyecto.includes(h.asignado_a)
         );
-        const idsRelacionUsuarioProyecto = activos.map((up) => up.id); // [12] en tu caso
 
-        console.log('[🧠 ID usuario]', userId);
-        console.log(
-          '[🧠 Relación usuario-proyecto activa]',
-          idsRelacionUsuarioProyecto
-        );
-
-        this.historiaService.obtenerHistorias().subscribe((historias) => {
-          console.log('[📋 Todas las historias]', historias);
-
-          this.historias = historias.filter((h) =>
-            idsRelacionUsuarioProyecto.includes(h.asignado_a)
-          );
-
-          console.log('[✅ Historias que se mostrarán]', this.historias);
-        });
+        console.log('[✅ Historias que se mostrarán]', this.historias);
       });
+    });
   }
+
+  abrirTareas(id: number): void {
+    this.router.navigate(['/dashboard/historias', id, 'tareas']);
+  }
+
+  abrirModalEdicion(historia: HistoriaUsuario): void {
+    this.historiaEditando = { ...historia };
+    this.modalEditarAbierto = true;
+  }
+
+  cerrarModalEdicion(): void {
+    this.modalEditarAbierto = false;
+  }
+
+  guardarCambioEstado(): void {
+  this.historiaService.actualizarHistoria(this.historiaEditando.id, {
+    estado: this.historiaEditando.estado,
+  }).subscribe({
+    next: (actualizada) => {
+      const index = this.historias.findIndex((h) => h.id === actualizada.id);
+      if (index !== -1) {
+        this.historias[index].estado = actualizada.estado;
+      }
+      this.cerrarModalEdicion();
+    },
+    error: (err) => {
+      console.error('❌ Error al actualizar historia', err);
+    },
+  });
+}
+
 }

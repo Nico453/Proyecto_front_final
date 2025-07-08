@@ -1,6 +1,6 @@
-// src/app/interfaces/historia-usuario.ts
+
 export interface HistoriaUsuario {
-  id: number;                   // ← nuevo
+  id: number;                   
   titulo: string;
   descripcion: string;
   puntos_historia: number;
@@ -8,5 +8,5 @@ export interface HistoriaUsuario {
   estado: string;
   usuario_proyecto: number;
   asignado_a: number | null;
-  fecha_creacion: string;       // ← nuevo
+  fecha_creacion: string;       
 }
