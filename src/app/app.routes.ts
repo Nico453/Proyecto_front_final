@@ -34,6 +34,21 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'historias',
+        loadComponent: () =>
+          import('./pages/historias-list/historias-list.component').then(
+            (m) => m.HistoriasListComponent
+          ),
+      },
+      {
+        path: 'historias/:id/tareas',
+        loadComponent: () =>
+          import('./pages/tareas-list/tareas-list.component').then(
+            (m) => m.TareasListComponent
+          ),
+      },
+
+      {
         path: '',
         redirectTo: 'proyectos',
         pathMatch: 'full',

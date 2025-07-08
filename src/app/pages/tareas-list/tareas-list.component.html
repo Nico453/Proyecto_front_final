@@ -1,0 +1,43 @@
+<div class="mt-6 px-4">
+  <h2 class="text-2xl font-bold mb-4">
+    Tareas de la Historia #{{ historiaId }}
+  </h2>
+
+  <button
+    class="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+    (click)="crearTarea()"
+  >
+    Crear Tarea
+  </button>
+
+  <table
+    *ngIf="tareas.length > 0"
+    class="min-w-full bg-white border border-gray-200 text-sm text-left"
+  >
+    <thead class="bg-gray-100 text-gray-700 uppercase">
+      <tr>
+        <th class="px-6 py-3">Título</th>
+        <th class="px-6 py-3">Descripción</th>
+        <th class="px-6 py-3">Estado</th>
+        <th class="px-6 py-3">Fecha</th>
+        <th class="px-6 py-3">Desarrollador</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let tarea of tareas"
+        class="border-b hover:bg-gray-50"
+      >
+        <td class="px-6 py-4">{{ tarea.titulo }}</td>
+        <td class="px-6 py-4">{{ tarea.descripcion }}</td>
+        <td class="px-6 py-4">{{ tarea.estado }}</td>
+        <td class="px-6 py-4">{{ tarea.fecha_creacion }}</td>
+        <td class="px-6 py-4">{{ tarea.desarrollador }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="tareas.length === 0" class="text-gray-500 mt-4">
+    No hay tareas registradas para esta historia.
+  </p>
+</div>

@@ -53,8 +53,25 @@
     <router-outlet></router-outlet>
 
     <!-- Campana de notificaciones -->
-    <div class="absolute top-4 right-4">
-      <app-notification></app-notification>
-    </div>
+    <!-- Campana de notificaciones -->
+<div class="absolute top-4 right-4">
+  <button (click)="toggleNotificaciones()" class="relative">
+    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M15 17h5l-1.405-1.405C18.79 14.79 18 13.42 18 12V8c0-3.31-2.69-6-6-6S6 4.69 6 8v4c0 1.42-.79 2.79-1.595 3.595L3 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+      </path>
+    </svg>
+    <span *ngIf="notificaciones.length > 0"
+      class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+      {{ notificaciones.length }}
+    </span>
+  </button>
+
+  <!-- Panel de notificaciones -->
+  <div *ngIf="mostrarNotificaciones" class="absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg p-4 z-50">
+    <app-notification></app-notification>
+  </div>
+</div>
+
   </div>
 </div>
